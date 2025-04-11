@@ -44,15 +44,11 @@ resource "github_repository" "test" {
 
 resource "github_branch_protection" "protect_stage" {
   repository_id = github_repository.test.node_id
-  pattern       = "stage"
+  pattern       = "devel"
 
   required_status_checks {
     strict   = true
-    contexts = ["ci/build"]
-  }
-
-  required_pull_request_reviews {
-    required_approving_review_count = 1
+    contexts = ["CI Pipeline / build (pull_request)"]
   }
 
   enforce_admins      = true
