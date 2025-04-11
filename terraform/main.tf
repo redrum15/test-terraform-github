@@ -40,3 +40,18 @@ resource "github_repository" "test" {
 #   allows_deletions    = false
 #   allows_force_pushes = false
 # }
+
+
+resource "github_branch_protection" "protect_stage" {
+  repository_id = github_repository.test.node_id
+  pattern       = "devel"
+
+  required_status_checks {
+    strict   = true
+    contexts = ["CI Pipeline / build (pull_request)"]
+  }
+
+  enforce_admins      = true
+  allows_force_pushes = false
+  allows_deletions    = false
+}
