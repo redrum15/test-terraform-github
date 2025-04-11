@@ -40,3 +40,22 @@ resource "github_repository" "test" {
 #   allows_deletions    = false
 #   allows_force_pushes = false
 # }
+
+
+resource "github_branch_protection" "protect_stage" {
+  repository_id = github_repository.test.node_id
+  pattern       = "stage"
+
+  required_status_checks {
+    strict   = true
+    contexts = ["ci/build"]
+  }
+
+  required_pull_request_reviews {
+    required_approving_review_count = 1
+  }
+
+  enforce_admins      = true
+  allows_force_pushes = false
+  allows_deletions    = false
+}
