@@ -1,0 +1,30 @@
+
+name: Verify Source Branch
+
+on:
+  pull_request:
+    branches:
+      - stage
+
+jobs:
+  verify-branch:
+    runs-on: ubuntu-latest
+    name: Verify PR Source Branch
+    steps:
+      - name: Check if PR is from devel
+        id: check-branch
+        run: |
+          if [ "${{ github.head_ref }}" = "devel" ]; then
+            echo "PR proviene de la rama devel. Verificación exitosa."
+            exit 0
+          else
+            echo "ERROR: Solo se permiten PRs desde la rama 'devel' hacia 'stage'."
+            exit 1
+          fi
+      
+      # Este paso solo se ejecuta si el anterior tuvo éxito
+      - name: Set success status
+        if: success()
+        run: |
+          # Podríamos usar la API de GitHub para establecer explícitamente un status check
+          echo "Verificación completada con éxito"
